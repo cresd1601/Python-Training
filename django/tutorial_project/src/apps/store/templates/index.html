@@ -1,0 +1,115 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product List</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 p-6">
+    <h1 class="text-2xl font-bold mb-4">Product List</h1>
+
+    <table class="min-w-full bg-white border border-gray-300 mb-6">
+      <thead>
+        <tr>
+          <th class="border-b px-4 py-2 text-center">Product Name</th>
+          <th class="border-b px-4 py-2 text-center">Description</th>
+          <th class="border-b px-4 py-2 text-center">Price</th>
+          <th class="border-b px-4 py-2 text-center">Stock Quantity</th>
+          <th class="border-b px-4 py-2 text-center">Category</th>
+          <th class="border-b px-4 py-2 text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td class="border-b px-4 py-2 text-center">{{ product.name }}</td>
+          <td class="border-b px-4 py-2 text-center">
+            {{ product.description }}
+          </td>
+          <td class="border-b px-4 py-2 text-center">{{ product.price }}</td>
+          <td class="border-b px-4 py-2 text-center">
+            {{ product.quantity_stock }}
+          </td>
+          <td class="border-b px-4 py-2 text-center">
+            {{ product.category.name }}
+          </td>
+          <!-- Display category name -->
+          <td class="border-b px-4 py-2 text-center">
+            <form method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ product.id }}" />
+              <button type="submit" name="delete_product" class="text-red-500">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="border-b px-4 py-2 text-center">
+            No products available.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2 class="text-xl font-bold mb-2">Add Product</h2>
+    <form class="flex space-x-4 mb-4" method="POST">
+      {% csrf_token %}
+      <!-- Dropdown for categories -->
+      <select
+        name="category"
+        class="border border-gray-300 p-2 flex-1"
+        required
+      >
+        <option value="">Select Category</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <input
+        type="text"
+        name="product_name"
+        placeholder="Product Name"
+        class="border border-gray-300 p-2 flex-1"
+        required
+      />
+      <input
+        type="text"
+        name="description"
+        placeholder="Description"
+        class="border border-gray-300 p-2 flex-1"
+        required
+      />
+      <input
+        type="number"
+        name="price"
+        placeholder="Price"
+        class="border border-gray-300 p-2 flex-1"
+        required
+      />
+      <input
+        type="number"
+        name="quantity_stock"
+        placeholder="Stock Quantity"
+        class="border border-gray-300 p-2 flex-1"
+        required
+      />
+
+      <button
+        type="submit"
+        name="add_product"
+        class="bg-blue-500 text-white p-2"
+      >
+        Add
+      </button>
+    </form>
+  </body>
+</html>

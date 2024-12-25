@@ -1,0 +1,3 @@
+Hello, World!
+Python is amazing. Isn't it?
+Let's strip: punctuation, whitespace, and CONVERT to lowercase.

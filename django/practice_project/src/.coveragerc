@@ -1,0 +1,6 @@
+[coverage:run]
+omit =
+    utils/schema.py
+    manage.py
+    config/*
+    */__init__.py

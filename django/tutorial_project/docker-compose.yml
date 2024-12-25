@@ -1,0 +1,44 @@
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./compose/nginx/Dockerfile
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - backend
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - env/.env
+    depends_on:
+      - database
+
+  database:
+    container_name: database
+    build:
+      context: .
+      dockerfile: ./compose/postgres/Dockerfile
+    expose:
+      - 5432
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - env/.env
+
+volumes:
+  database_volume:
+  static_volume:

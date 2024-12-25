@@ -1,0 +1,4 @@
+-r base.txt
+
+# Development-specific dependencies
+drf-spectacular==0.26.3

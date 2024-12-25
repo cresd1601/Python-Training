@@ -1,0 +1,30 @@
+# Base image for Python
+FROM python:3.9-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Install system dependencies (netcat-openbsd)
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+# Copy the entire src folder (including requirements) into the container
+COPY ./src/ /usr/src/app/src/
+
+# Install Python dependencies from requirements inside the src folder (development environment)
+RUN pip install --upgrade pip
+RUN pip install -r /usr/src/app/src/requirements/development.txt
+
+# Copy entrypoint script and ensure line endings for UNIX
+COPY ./scripts /usr/src/app/scripts
+RUN sed -i 's/\r$//g' /usr/src/app/scripts/entrypoint.sh /usr/src/app/scripts/start-dev.sh
+RUN chmod +x /usr/src/app/scripts/entrypoint.sh /usr/src/app/scripts/start-dev.sh
+
+# Set the entrypoint to the entrypoint.sh script
+ENTRYPOINT ["/usr/src/app/scripts/entrypoint.sh"]
+
+# Set the default command to run the development server
+CMD ["/usr/src/app/scripts/start-dev.sh"]
